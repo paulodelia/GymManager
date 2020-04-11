@@ -17,9 +17,13 @@ module.exports = {
             offset,
             callback(instructors) {
                 const pagination = {
-                    total: Math.ceil(instructors[0].total / limit),
                     page
                 }
+                
+                if (instructors[0]) {
+                    pagination.total = Math.ceil(instructors[0].total / limit)
+                }
+
                 return res.render("instructors/index", { instructors, pagination, filter })
             }
         }
@@ -47,7 +51,7 @@ module.exports = {
     },
 
     show(req, res) {
-        Instructor.find(req.params.id, function(instructor) {
+        Instructor.find(req.params.id, function (instructor) {
             if (!instructor) return res.send('Instructor not found!');
 
             instructor.age = age(instructor.birth);
@@ -59,7 +63,7 @@ module.exports = {
     },
 
     edit(req, res) {
-        Instructor.find(req.params.id, function(instructor) {
+        Instructor.find(req.params.id, function (instructor) {
             if (!instructor) return res.send('Instructor not found!');
 
             instructor.birth = date(instructor.birth).iso;
@@ -77,13 +81,13 @@ module.exports = {
             }
         }
 
-        Instructor.update(req.body, function() {
+        Instructor.update(req.body, function () {
             return res.redirect(`/instructors/${req.body.id}`)
         });
     },
 
     delete(req, res) {
-        Instructor.delete(req.body.id, function() {
+        Instructor.delete(req.body.id, function () {
             return res.redirect('/instructors')
         })
     },
